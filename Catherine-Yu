@@ -94,7 +94,6 @@ class CustomerSystem {
         System.out.println("Customer's credit card number");
         info[5] = sc.nextLine();
     
-        sc.close();
 	//Return the populated array
         return info;
     }
@@ -161,7 +160,6 @@ class CustomerSystem {
         while ((count == 0) || (postalCode.length() < 3));      //Condition to loop again
     	
 	reader.close();
-	sc.close();
     }
 
     public static void validateCreditCard() {
