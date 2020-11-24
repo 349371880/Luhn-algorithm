@@ -94,7 +94,8 @@ class CustomerSystem {
         System.out.println("Customer's credit card number");
         info[5] = sc.nextLine();
     
-        //Return the populated array
+        sc.close();
+	//Return the populated array
         return info;
     }
     /**
@@ -158,6 +159,9 @@ class CustomerSystem {
             }
         }
         while ((count == 0) || (postalCode.length() < 3));      //Condition to loop again
+    	
+	reader.close();
+	sc.close();
     }
 
     public static void validateCreditCard() {
@@ -173,7 +177,7 @@ class CustomerSystem {
             //Enter all of the customer's data, separated by commas due to the style of CSV files
             print.print(info[i] + ",");
         }
-        //Note: Adding data for multiple customers does not work due to an issue with closing the PrintWriter
+        //Note: Adding data for multiple customers does not work yet due to an issue with closing the PrintWriter
     }
     /*******************************************************************
     *       ADDITIONAL METHODS MAY BE ADDED BELOW IF NECESSARY         *
