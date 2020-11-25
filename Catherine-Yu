@@ -51,9 +51,9 @@ class CustomerSystem {
 
         System.out.println("Program Terminated");
 
-        //Close the PrintWriter and Scanner
-        printWriter.close();
+        //Close the Scanner and PrintWriter
         reader.close();
+	printWriter.close();
     }
 
     /**
@@ -113,7 +113,7 @@ class CustomerSystem {
         int count = 0;
         String originalPostalCode = postalCode;
 
-		do {
+	do {
             //Validate the length of the postal code
             if (postalCode.length() < 3) {
                 System.out.println("Please enter a valid postal code that has three or more characters");
@@ -161,7 +161,6 @@ class CustomerSystem {
     	
 	reader.close();
     }
-
     public static void validateCreditCard() {
     }
     /**
@@ -175,7 +174,9 @@ class CustomerSystem {
             //Enter all of the customer's data, separated by commas due to the style of CSV files
             print.print(info[i] + ",");
         }
-        //Note: Adding data for multiple customers does not work yet due to an issue with closing the PrintWriter
+        print.println();
+
+        System.out.println("The file has been created.");
     }
     /*******************************************************************
     *       ADDITIONAL METHODS MAY BE ADDED BELOW IF NECESSARY         *
