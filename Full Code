@@ -26,13 +26,12 @@ class CustomerSystem {
         exitCondition = "9";
 
         // More variables for the main may be declared in the space below
-        // Declare and initialize variables
-        int count = 1;
-        boolean validatePC, validateCC, validateCCWithLuhn;
         // Declare an array with six elements to contain the customer's information
         String[] customerInfo = new String[6];
-        // Declare and initialize the name of the file containing the customer's information
-        String fileName = "customer_information.csv";
+        // Declare and initialize variables
+        String fileName = "customer_information.csv";       // The name of the file containing the customer's information
+        int count = 1;
+        boolean validatePC, validateCC, validateCCWithLuhn;
 
         do {
             printMenu();                                    // Printing out the main menu
@@ -43,8 +42,6 @@ class CustomerSystem {
 
                 // Collect the customer's information and store it in a String array
                 customerInfo = enterCustomerInfo(count, customerInfo);
-                // Add one to count to update the next customer's ID
-                count++;
 
             } else if (userInput.equals(generateCustomerOption)) {
                 // Only the line below may be edited based on the parameter list and how you design the method return
@@ -70,6 +67,9 @@ class CustomerSystem {
                     // Generate a data file with the customer's entered information
                     generateCustomerDataFile(customerInfo, fileName);
                     System.out.println("The file has been created.");
+                    
+                    // Add one to count to update the next customer's ID
+                    count++;
                 } else {
                     System.out.println("Please enter the customer's information again");
                 }
