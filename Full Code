@@ -124,7 +124,7 @@ class CustomerSystem {
                 String line = reader.nextLine();
                 String stringID = Integer.toString(ID);
                 // If the line contains the current ID number, add one to udpate its value
-                if (line.contains(stringID)) {
+                if (line.contains(stringID + ",")) {
                     ID++;
                 }
             }
