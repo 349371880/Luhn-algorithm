@@ -1,0 +1,24 @@
+/**
+  * Create a .CSV file that contains the customer's entered information
+  * @author          Catherine Yu
+  * @param info      The array that contains the customer's entered information
+  * @param fileName  The name of the file that will contain all of the customer's information
+  * @throws IOException
+  */
+    public static void generateCustomerDataFile(String[] info, String fileName) throws IOException {
+        // Create a file, FileWriter, and PrintWriter
+        File file = new File(fileName);
+        FileWriter filewriter = new FileWriter(file, true);
+        PrintWriter printwriter = new PrintWriter(filewriter);
+
+        // For loop to enter all of the customer's information
+        for (int i = 0; i < info.length; i++) {
+            // Separate the information with commas due to the style of CSV files
+            printwriter.print(info[i] + ",");
+        }
+        // Print an empty line to allow multiple inputs
+        printwriter.println();
+        
+        // Close the PrintWriter
+        printwriter.close();
+    }
