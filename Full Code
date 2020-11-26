@@ -2,10 +2,12 @@ import java.util.Scanner;
 // More packages may be imported in the space below
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 class CustomerSystem {
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws IOException {
         // Please do not edit any of these variables
         Scanner reader = new Scanner(System.in);
         String userInput, enterCustomerOption, generateCustomerOption, exitCondition;
@@ -14,16 +16,13 @@ class CustomerSystem {
         exitCondition = "9";
 
         // More variables for the main may be declared in the space below
-        //Declare and initialize count
+        // Declare and initialize variables
         int count = 1;
-        //Declare an array with six elements to contain the customer's information
+        boolean validatePC, validateCC, validateCCWithLuhn;
+        // Declare an array with six elements to contain the customer's information
         String[] customerInfo = new String[6];
-        //Declare and initialize the name of the file containing the customer's information
+        // Declare and initialize the name of the file containing the customer's information
         String fileName = "customer_information.csv";
-        //Create a file with the value of fileName as its name
-        File file = new File(fileName);
-        //Create a PrintWriter
-        PrintWriter printWriter = new PrintWriter(fileName);
 
         do {
             printMenu();                                    // Printing out the main menu
@@ -31,35 +30,40 @@ class CustomerSystem {
 
             if (userInput.equals(enterCustomerOption)) {
                 // Only the line below may be edited based on the parameter list and how you design the method return
-                
-                //Collect the customer's information and store it in a String array
+
+                // Collect the customer's information and store it in a String array
                 customerInfo = enterCustomerInfo(count, customerInfo);
-                //Add one to count to update the next customer's ID
+                // Add one to count to update the next customer's ID
                 count++;
-                
-                //Validate the entered postal code and corresponding city
-                validatePostalCode(customerInfo[4], customerInfo[3], customerInfo);
-                
-                //Validate the entered credit card number
-                if (validateCreditCard(customerInfo[5]) == true) {
-                    System.out.println("The length of the credit card number is valid");
+
+            } else if (userInput.equals(generateCustomerOption)) {
+                // Only the line below may be edited based on the parameter list and how you design the method return
+
+                // Validate the entered postal code and corresponding city
+                validatePC = validatePostalCode(customerInfo[4], customerInfo[3], customerInfo);
+                if (validatePC == true) {
+                    System.out.println(customerInfo[4] + " is a valid postal code for " + customerInfo[3]);
                 } else {
-                    System.out.println("The length of the credit card number is not valid");
+                    System.out.println(customerInfo[4] + " is not a valid postal code for " + customerInfo[3]);
                 }
-                
-                if (LuhnCheck(customerInfo[5]) == true) {
+                // Validate the entered credit card number
+                validateCC = validateCreditCard(customerInfo[5]);
+                validateCCWithLuhn = LuhnCheck(customerInfo[5]);
+                if ((validateCC == true) && (validateCCWithLuhn == true)) {
                     System.out.println(customerInfo[5] + " is a valid credit card number");
                 } else {
                     System.out.println(customerInfo[5] + " is not a valid credit card number");
                 }
 
-            } else if (userInput.equals(generateCustomerOption)) {
-                // Only the line below may be edtted based on the parameter list and how you design the method return
-                
-                //Generate a data file with the customer's entered information 
-                generateCustomerDataFile(customerInfo, printWriter);
-                System.out.println("The file has been created.");
-        
+                // Only generate a data file if the postal code, city, and credit card number are valid
+                if ((validatePC == true) && (validateCC == true) && (validateCCWithLuhn == true)) {
+                    // Generate a data file with the customer's entered information
+                    generateCustomerDataFile(customerInfo, fileName);
+                    System.out.println("The file has been created.");
+                } else {
+                    System.out.println("Please enter the customer's information again");
+                }
+
             } else {
                 System.out.println("Please type in a valid option (A number from 1-9)");
             }
@@ -68,16 +72,15 @@ class CustomerSystem {
 
         System.out.println("Program Terminated");
 
-        //Close the Scanner and PrintWriter
+        // Close the Scanner
         reader.close();
-        printWriter.close();
     }
     /**
      * Print the user interface into the terminal panel
      * @author Mr. Ho
      */
     public static void printMenu() {
-        //Print a line for clarity and aesthetic purposes
+        // Print a line for clarity purposes
         System.out.println();
         System.out.println("Customer and Sales System\n"
         .concat("1. Enter Customer Information\n")
@@ -85,23 +88,22 @@ class CustomerSystem {
         .concat("3. Report on total Sales (Not done in this part)\n")
         .concat("4. Check for fraud in sales data (Not done in this part)\n")
         .concat("9. Quit\n")
-        .concat("Enter menu option (1-9)\n")
-        );
+        .concat("Enter menu option (1-9)\n"));
     }
     /**
      * Take the customer's information and store it in a String array
-     * @author          Catherine Yu
-     * @param count     The customer's unique ID value
-     * @param info      An empty array to contain the customer's information
-     * @return          The populated array that contains the customer's information
+     * @author      Catherine Yu
+     * @param count The customer's unique ID value
+     * @param info  An empty array to contain the customer's information
+     * @return      The populated array that contains the customer's information
      */
     public static String[] enterCustomerInfo(int count, String[] info) {
-        //Create a new scanner
+        // Create a new scanner
         Scanner sc = new Scanner(System.in);
 
-        //Set the customer's ID as the value of count
+        // Set the customer's ID as the value of count
         info[0] = "" + count;
-        //User inputs
+        // User inputs
         System.out.println("Customer's first name:");
         info[1] = sc.nextLine();
         System.out.println("Customer's last name");
@@ -112,91 +114,65 @@ class CustomerSystem {
         info[4] = sc.nextLine();
         System.out.println("Customer's credit card number");
         info[5] = sc.nextLine();
-    
-        //Return the populated array
+
+        // Return the populated array
         return info;
     }
     /**
-     * Compare the customer's entered postal code and city 
-     * with a document of Canadian postal codes and cities to ensure they are valid
+     * Compare the customer's entered postal code and city with a document of
+     * Canadian postal codes and cities to ensure they are valid
      * @author              Catherine Yu
      * @param postalCode    The customer's entered postal code
      * @param city          The customer's entered city
      * @param info          The array containing the customer's entered information
+     * @return              A boolean value of whether the postal code and city are valid or not
+     * @throws FileNotFoundException
      */
-    public static void validatePostalCode(String postalCode, String city, String[] info) {
-        //Create scanners and a file
+    public static boolean validatePostalCode(String postalCode, String city, String[] info) throws FileNotFoundException {
+        // Create scanners and a file
         Scanner reader = new Scanner(System.in);
-        Scanner sc = new Scanner(System.in);
         String fileName = "postal_codes.csv";
         File file = new File(fileName);
-        //Declare and initialize variables
-        int count = 0;
-        String originalPostalCode = postalCode;
+        // Declare and initialize validatePC
+        boolean validatePC = true;
 
-		do {
-            //Validate the length of the postal code
-            if (postalCode.length() < 3) {
-                System.out.println("Please enter a valid postal code that has three or more characters");
-                //User input for the new postal code
-                postalCode = sc.nextLine();
-            }
-            //Validate the postal code and the corresponding city
-            try {
-                reader = new Scanner(file);
-                //Create an array that splits the first three digits from the other digits
-                String[] firstThree = postalCode.split(" ");
-                
-                //Go through every line in the file to validate
-                while (reader.hasNextLine()) {
-                    String line = reader.nextLine();
-                    //If the line contains both the first three digits of the entered postal code and the city, separated by the deliminator |, the postal code is valid
-                    if ( (line.contains(firstThree[0] + "|" + city)) ) {
-                        System.out.println(postalCode + " is a valid postal code for " + city);
-                        //Update the postal code if applicable
-                        info[4] = postalCode;
-                        //Add one to count for the do-while loop condition
-                        count++;
-                    }
+        // Validate the length of the postal code
+        if (postalCode.length() < 3) {
+            validatePC = false;
+        } else {
+            // Validate the postal code and the corresponding city
+            reader = new Scanner(file);
+            // Create an array that splits the first three digits from the other digits
+            String[] firstThree = postalCode.split(" ");
+
+            // Go through every line in the file to validate
+            while (reader.hasNextLine()) {
+                String line = reader.nextLine();
+                // If the line contains both the first three digits of the entered postal code and the city
+                // Separated by the deliminator |, the postal code is valid
+                if ((line.contains(firstThree[0] + "|" + city))) {
+                    validatePC = true;
+                    // Break the loop once the postal code is validated
+                    break;
+                } else {
+                    validatePC = false;
                 }
-                //Execute if none of the lines contain the first three digits of the postal code and the city
-                //Count does not get updated in this block as the postal code needs to be validated again
-                if (count == 0) {
-                    System.out.println("Please enter a valid postal code");
-                    postalCode = sc.nextLine();
-                    //If the user did not make a mistake in entering the postal code, prompt the user to re-enter the city
-                    if (postalCode.equals(originalPostalCode)) {
-                        System.out.println("Please enter a valid city");
-                        city = sc.nextLine();
-                        //Update the city if applicable
-                        info[3] = city;
-                    }
-                }
-            }
-            //Catch any Exceptions
-            catch (Exception ex) {
-                ex.printStackTrace();
             }
         }
-        //Condition to loop again
-        while ((count == 0) || (postalCode.length() < 3));
-    
-        //Close the Scanner
-        reader.close();
+        return validatePC;
     }
     /**
      * Ensure that the customer's credit card has at least 9 digits
-     * @author          Alex Theaker
-     * @param ccNumber  The customer's entered credit card number
-     * @return          A boolean value of whether the length is valid or not
+     * @author Alex Theaker
+     * @param ccNumber The customer's entered credit card number
+     * @return A boolean value of whether the length is valid or not
      */
     public static boolean validateCreditCard(String ccNumber) {
-        //Declare and initialize variables
+        // Declare and initialize variables
         int length = ccNumber.length();
-        //Return a boolean value based on the length of the entered credit card number
+        // Return a boolean value based on the length of the entered credit card number
         if (length < 9) {
             return false;
-
         } else {
             return true;
         }
@@ -205,46 +181,55 @@ class CustomerSystem {
      * Use the Luhn Algorithm to check whether a credit card number is valid or not
      * @author          Alex Theaker
      * @param ccNumber  The customer's entered credit card number
-     * @return          A boolean 
+     * @return          A boolean of whether the credit card number is valid or not
      */
-    public static boolean LuhnCheck (String ccNumber) {
-        //Declare and initialize variables
+    public static boolean LuhnCheck(String ccNumber) {
+        // Declare and initialize variables
         int length = ccNumber.length();
         int sum = 0;
         boolean second = false;
-    
-        //For loop that loops backwards through the numbers
+
+        // For loop that loops backwards through the numbers
         for (int i = length - 1; i >= 0; i--) {
-            //Subtract 0 so it converts it to an integer
+            // Subtract 0 so it converts it to an integer
             int d = ccNumber.charAt(i) - '0';
-    
-            //Multiply alternating numbers by 2
+
+            // Multiply alternating numbers by 2
             if (second == true)
                 d = d * 2;
-    
-            //Add two digits to handle cases that make two digits after doubling
+
+            // Add two digits to handle cases that make two digits after doubling
             sum += d / 10;
             sum += d % 10;
-    
-            //Reverse the second boolean
+
+            // Reverse the second boolean
             second = !second;
         }
-        //Returns a boolean value of true or false depending on the value of sum
+        // Returns a boolean value of true or false depending on the value of sum
         return (sum % 10 == 0);
     }
     /**
      * Create a .CSV file that contains the customer's entered information
-     * @author        Catherine Yu
-     * @param info    The array that contains the customer's entered information
-     * @param print   The created and initialized PrintWriter
+     * @author          Catherine Yu
+     * @param info      The array that contains the customer's entered information
+     * @param fileName  The name of the file that will contain all of the customer's information
+     * @throws IOException
      */
-    public static void generateCustomerDataFile(String[] info, PrintWriter print) {
-        //For loop to enter all of the customer's information
+    public static void generateCustomerDataFile(String[] info, String fileName) throws IOException {
+        // Create a file, FileWriter, and PrintWriter
+        File file = new File(fileName);
+        FileWriter filewriter = new FileWriter(file, true);
+        PrintWriter printwriter = new PrintWriter(filewriter);
+
+        // For loop to enter all of the customer's information
         for (int i = 0; i < info.length; i++) {
-            //Separate the information with commas due to the style of CSV files
-            print.print(info[i] + ",");
+            // Separate the information with commas due to the style of CSV files
+            printwriter.print(info[i] + ",");
         }
-        //Print an empty line to allow multiple inputs
-        print.println();
+        // Print an empty line to allow multiple inputs
+        printwriter.println();
+        
+        // Close the PrintWriter
+        printwriter.close();
     }
 }
