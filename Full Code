@@ -10,8 +10,10 @@
 
 import java.util.Scanner;
 // More packages may be imported in the space below
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -139,36 +141,40 @@ class CustomerSystem {
      * @throws FileNotFoundException
      */
     public static boolean validatePostalCode(String postalCode, String city, String[] info) throws FileNotFoundException {
-        // Create scanners and a file
-        Scanner reader = new Scanner(System.in);
+        // Create a file and a BufferedReader that uses a FileReader to read the file
         String fileName = "postal_codes.csv";
         File file = new File(fileName);
-        // Declare and initialize validatePC
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        // Declare and initialize variables
         boolean validatePC = true;
+        String line; 
 
         // Validate the length of the postal code
         if (postalCode.length() < 3) {
             validatePC = false;
         } else {
-            // Validate the postal code and the corresponding city
-            reader = new Scanner(file);
             // Create an array that splits the first three digits from the other digits
             String[] firstThree = postalCode.split(" ");
 
-            // Go through every line in the file to validate
-            while (reader.hasNextLine()) {
-                String line = reader.nextLine();
-                // If the line contains both the first three digits of the entered postal code and the city
-                // Separated by the deliminator |, the postal code is valid
-                if ((line.contains(firstThree[0] + "|")) && (line.contains(city))) {
-                    validatePC = true;
-                    // Break the loop once the postal code is validated
-                    break;
-                } else {
-                    validatePC = false;
+            try {            
+                // Loops until there are no more lines to read
+                while ((line = reader.readLine()) != null) {
+                    // The postal code and city are valid if they appear in the same line
+                    if ((line.contains(firstThree[0] + "|")) && (line.contains(city))) {
+                        validatePC = true;
+                        // Break the loop once the postal code is validated
+                        break;
+                    } else {
+                        // Otherwise they are not valid
+                        validatePC = false;
+                    }
                 }
+            // Catch any exceptions
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
         }
+        // Return whether the postal code and city are valid or not
         return validatePC;
     }
     /**
