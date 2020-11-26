@@ -163,9 +163,9 @@ class CustomerSystem {
     }
     /**
      * Ensure that the customer's credit card has at least 9 digits
-     * @author Alex Theaker
-     * @param ccNumber The customer's entered credit card number
-     * @return A boolean value of whether the length is valid or not
+     * @author          Alex Theaker
+     * @param ccNumber  The customer's entered credit card number
+     * @return          A boolean value of whether the length is valid or not
      */
     public static boolean validateCreditCard(String ccNumber) {
         // Declare and initialize variables
