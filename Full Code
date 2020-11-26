@@ -2,7 +2,8 @@
  * Date: November 23, 2020
  * Authors: Alex Theaker and Catherine Yu
  * Teacher: Mr. Ho - ICS3U1-02
- * Description: Customer Information System that allows the user to enter customer information (first name, last name, city, postal code, and credit card number)
+ * Description: Customer Information System that allows the user to enter customer information 
+ * (first name, last name, city, postal code, and credit card number)
  * And the program generates a unique customer ID, validates the city, postal code, and credit card number
  * And generates a .CSV file containing all of the entered and validated information
  */
