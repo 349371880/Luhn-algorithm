@@ -2,7 +2,7 @@
  * Date: November 23, 2020
  * Authors: Alex Theaker and Catherine Yu
  * Teacher: Mr. Ho - ICS3U1-02
- * Description: Customer Information System that allows the user to enter customer information 
+ * Description: Customer Information System that allows the user to enter customer information
  * (first name, last name, city, postal code, and credit card number)
  * And the program generates a unique customer ID, validates the city, postal code, and credit card number
  * And generates a .CSV file containing all of the entered and validated information
@@ -31,9 +31,11 @@ class CustomerSystem {
         // Declare an array with six elements to contain the customer's information
         String[] customerInfo = new String[6];
         // Declare and initialize variables
-        String fileName = "customer_information.csv";       // The name of the file containing the customer's information
-        int count = 1;
         boolean validatePC, validateCC, validateCCWithLuhn;
+        int customerID = 1;
+        String fileName = "customer_information.csv";
+        // Create a file with the above file name
+        File file = new File(fileName);
 
         do {
             printMenu();                                    // Printing out the main menu
@@ -42,8 +44,11 @@ class CustomerSystem {
             if (userInput.equals(enterCustomerOption)) {
                 // Only the line below may be edited based on the parameter list and how you design the method return
 
+                if (file.exists()) {
+                    customerID = generateCustomerID(fileName, customerID);
+                }
                 // Collect the customer's information and store it in a String array
-                customerInfo = enterCustomerInfo(count, customerInfo);
+                customerInfo = enterCustomerInfo(customerID, customerInfo);
 
             } else if (userInput.equals(generateCustomerOption)) {
                 // Only the line below may be edited based on the parameter list and how you design the method return
@@ -67,11 +72,8 @@ class CustomerSystem {
                 // Only generate a data file if the postal code, city, and credit card number are valid
                 if ((validatePC == true) && (validateCC == true) && (validateCCWithLuhn == true)) {
                     // Generate a data file with the customer's entered information
-                    generateCustomerDataFile(customerInfo, fileName);
+                    generateCustomerDataFile(customerInfo, file);
                     System.out.println("The file has been created.");
-                    
-                    // Add one to count to update the next customer's ID
-                    count++;
                 } else {
                     System.out.println("Please enter the customer's information again");
                 }
@@ -103,18 +105,48 @@ class CustomerSystem {
         .concat("Enter menu option (1-9)\n"));
     }
     /**
+     * Assign the customer a unique ID value based on previous ID values
+     * @author          Alex Theaker
+     * @param fileName  The name of the file that will contain all of the customer's information
+     * @param ID        The customer's unique ID
+     * @return          The customer's updated ID value
+     */
+    public static int generateCustomerID(String fileName, int ID) {
+        // Create a file
+        File readFile = new File(fileName);
+        
+        try {
+            // Create a scanner that reads the file
+            Scanner reader = new Scanner(System.in);
+            reader = new Scanner(readFile);
+            
+            while (reader.hasNextLine()) {
+                String line = reader.nextLine();
+                String stringID = Integer.toString(ID);
+                // If the line contains the current ID number, add one to udpate its value
+                if (line.contains(stringID)) {
+                    ID++;
+                }
+            }
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        // Return the updated ID value
+        return ID;
+    }
+    /**
      * Take the customer's information and store it in a String array
      * @author      Catherine Yu
-     * @param count The customer's unique ID value
+     * @param ID    The customer's unique ID value
      * @param info  An empty array to contain the customer's information
      * @return      The populated array that contains the customer's information
      */
-    public static String[] enterCustomerInfo(int count, String[] info) {
+    public static String[] enterCustomerInfo(int ID, String[] info) {
         // Create a new scanner
         Scanner sc = new Scanner(System.in);
 
-        // Set the customer's ID as the value of count
-        info[0] = "" + count;
+        info[0] = "" + ID;
         // User inputs
         System.out.println("Customer's first name:");
         info[1] = sc.nextLine();
@@ -184,6 +216,8 @@ class CustomerSystem {
      * @return          A boolean value of whether the length is valid or not
      */
     public static boolean validateCreditCard(String ccNumber) {
+        // Get rid of spaces in the card number
+        ccNumber = ccNumber.replaceAll("\s+", "");
         // Declare and initialize variables
         int length = ccNumber.length();
         // Return a boolean value based on the length of the entered credit card number
@@ -201,6 +235,7 @@ class CustomerSystem {
      */
     public static boolean LuhnCheck(String ccNumber) {
         // Declare and initialize variables
+        ccNumber = ccNumber.replaceAll("\s+", "");      // Get rid of spaces in the card number
         int length = ccNumber.length();
         int sum = 0;
         boolean second = false;
@@ -213,11 +248,10 @@ class CustomerSystem {
             // Multiply alternating numbers by 2
             if (second == true)
                 d = d * 2;
-
             // Add two digits to handle cases that make two digits after doubling
             sum += d / 10;
             sum += d % 10;
-
+            
             // Reverse the second boolean
             second = !second;
         }
@@ -228,12 +262,11 @@ class CustomerSystem {
      * Create a .CSV file that contains the customer's entered information
      * @author          Catherine Yu
      * @param info      The array that contains the customer's entered information
-     * @param fileName  The name of the file that will contain all of the customer's information
+     * @param file      
      * @throws IOException
      */
-    public static void generateCustomerDataFile(String[] info, String fileName) throws IOException {
+    public static void generateCustomerDataFile(String[] info, File file) throws IOException {
         // Create a file, FileWriter, and PrintWriter
-        File file = new File(fileName);
         FileWriter filewriter = new FileWriter(file, true);
         PrintWriter printwriter = new PrintWriter(filewriter);
 
