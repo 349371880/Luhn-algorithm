@@ -120,7 +120,7 @@ class CustomerSystem {
         info[2] = sc.nextLine();
         System.out.println("Customer's city with proper capitalization");
         info[3] = sc.nextLine();
-        System.out.println("Customer's postal code with proper spacing");
+        System.out.println("Customer's postal code with proper capitalization and spacing");
         info[4] = sc.nextLine();
         System.out.println("Customer's credit card number");
         info[5] = sc.nextLine();
