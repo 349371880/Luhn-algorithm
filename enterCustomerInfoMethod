@@ -1,16 +1,15 @@
 /**
   * Take the customer's information and store it in a String array
   * @author      Catherine Yu
-  * @param count The customer's unique ID value
-  * @param info  An empty array to contain the customer's information
+  * @param ID    The customer's unique ID value
+  * @param info  An empty array that will contain the customer's information
   * @return      The populated array that contains the customer's information
   */
-public static String[] enterCustomerInfo(int count, String[] info) {
+    public static String[] enterCustomerInfo(int ID, String[] info) {
         // Create a new scanner
         Scanner sc = new Scanner(System.in);
 
-        // Set the customer's ID as the value of count
-        info[0] = "" + count;
+        info[0] = "" + ID;
         // User inputs
         System.out.println("Customer's first name:");
         info[1] = sc.nextLine();
