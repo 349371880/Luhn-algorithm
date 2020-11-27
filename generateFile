@@ -13,7 +13,7 @@ if (!informationFile.exists()) {
         // Create a FileWriter and PrintWriter
         FileWriter filewriter = new FileWriter(writeFile, true);
         PrintWriter printwriter = new PrintWriter(filewriter);
-        // Create a String array to create a header
+        // Create a String array to input a header
         String[] header = {"ID", "First Name", "Last Name", "City", "Postal Code", "Credit Card Number"};
         
         // Input the header, separated by commas as the deliminator
