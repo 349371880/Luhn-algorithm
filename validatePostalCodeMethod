@@ -1,39 +1,40 @@
 /**
-  * Compare the customer's entered postal code and city with a document of
-  * Canadian postal codes and cities to ensure they are valid
-  * @author              Catherine Yu
-  * @param postalCode    The customer's entered postal code
-  * @param city          The customer's entered city
-  * @param info          The array containing the customer's entered information
-  * @return              A boolean value of whether the postal code and city are valid or not
-  * @throws FileNotFoundException
-  */
+     * Compare the customer's postal code and city with a document of 
+     * Canadian postal codes and cities to ensure they are valid
+     * @author              Catherine Yu
+     * @param postalCode    The customer's postal code
+     * @param city          The customer's city
+     * @param info          The populated array containing the customer's information
+     * @return              A boolean value of whether the postal code and city are valid or not
+     * @throws FileNotFoundException
+     */
     public static boolean validatePostalCode(String postalCode, String city, String[] info) throws FileNotFoundException {
         // Create a file and a BufferedReader that uses a FileReader to read the file
+        // A BufferedReader is used instead of Scanner as the Scanner has a limit to the number of lines it can read
         String fileName = "postal_codes.csv";
-        File file = new File(fileName);
-        BufferedReader reader = new BufferedReader(new FileReader(file));
+        File readFile = new File(fileName);
+        BufferedReader bufferedreader = new BufferedReader(new FileReader(readFile));
         // Declare and initialize variables
         boolean validatePC = true;
         String line; 
-
+        // Create an array that splits the first three digits of the postal code from the other digits
+        String[] firstThree = postalCode.split(" ");
+    
         // Validate the length of the postal code
         if (postalCode.length() < 3) {
             validatePC = false;
+        // If the postal code is more than three characters, continue validating
         } else {
-            // Create an array that splits the first three digits from the other digits
-            String[] firstThree = postalCode.split(" ");
-
-            try {            
+            try {
                 // Loops until there are no more lines to read
-                while ((line = reader.readLine()) != null) {
+                while ((line = bufferedreader.readLine()) != null) {
                     // The postal code and city are valid if they appear in the same line
                     if ((line.contains(firstThree[0] + "|")) && (line.contains(city))) {
                         validatePC = true;
                         // Break the loop once the postal code is validated
                         break;
                     } else {
-                        // Otherwise they are not valid
+                        // Otherwise the postal code and/or city are not valid
                         validatePC = false;
                     }
                 }
