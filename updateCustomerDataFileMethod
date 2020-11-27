@@ -1,24 +1,24 @@
 /**
-  * Updates the .CSV file that contains the customer's entered information
-  * @author          Catherine Yu
-  * @param info      The array that contains the customer's entered information
-  * @param fileName  The name of the file that will contain all of the customer's information
-  * @throws IOException
-  */
-    public static void updateCustomerDataFile(String[] info, String fileName) throws IOException {
+     * Updates the .CSV file that contains every customer's information
+     * @author          Catherine Yu
+     * @param info      The populated array that contains the customer's information
+     * @param file      The file that contains every customers' information
+     * @throws IOException
+     */
+    public static void updateCustomerDataFile(String[] info, File file) throws IOException {
         // Create a file, FileWriter, and PrintWriter
-        File file = new File(fileName);
         FileWriter filewriter = new FileWriter(file, true);
         PrintWriter printwriter = new PrintWriter(filewriter);
 
-        // For loop to enter all of the customer's information
+        // Enter all of the customer's information
         for (int i = 0; i < info.length; i++) {
-            // Separate the information with commas due to the style of CSV files
+            // Separate the information with commas, as the deliminator, due to the style of CSV files
             printwriter.print(info[i] + ",");
         }
-        // Print an empty line to allow multiple inputs
+        // Print an empty line to allow multiple inputs afterwards
         printwriter.println();
         
         // Close the PrintWriter
         printwriter.close();
     }
+}
