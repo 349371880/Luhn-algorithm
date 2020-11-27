@@ -1,11 +1,11 @@
 /**
-  * Create a .CSV file that contains the customer's entered information
+  * Updates the .CSV file that contains the customer's entered information
   * @author          Catherine Yu
   * @param info      The array that contains the customer's entered information
   * @param fileName  The name of the file that will contain all of the customer's information
   * @throws IOException
   */
-    public static void generateCustomerDataFile(String[] info, String fileName) throws IOException {
+    public static void updateCustomerDataFile(String[] info, String fileName) throws IOException {
         // Create a file, FileWriter, and PrintWriter
         File file = new File(fileName);
         FileWriter filewriter = new FileWriter(file, true);
