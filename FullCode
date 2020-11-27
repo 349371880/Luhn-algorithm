@@ -80,7 +80,7 @@ class CustomerSystem {
                 if ((validatePC == true) && (validateCC == true) && (validateCCWithLuhn == true)) {
                     // Update the file with the current customer's information
                     updateCustomerDataFile(customerInfo, informationFile);
-                    System.out.println("The file has been created with the name " + fileName);
+                    System.out.println("The file has been updated with the name " + fileName);
                 } else {
                     // Otherwise, re-prompt the user
                     System.out.println("Please enter the customer's information again");
