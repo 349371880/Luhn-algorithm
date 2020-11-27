@@ -1,21 +1,21 @@
 /**
-  * Create the file that will store all of the customer's information
-  * @author          Catherine Yu
-  * @param file      The file that contains all of the customers' information
-  * @throws IOException
-  */
-    public static void generateFile(File file) throws IOException {
+     * Create the file that will store every customer's information
+     * @author              Catherine Yu
+     * @param writeFile     The file that will contain every customers' information
+     * @throws IOException
+     */
+    public static void generateFile(File writeFile) throws IOException {
         // Create a FileWriter and PrintWriter
-        FileWriter filewriter = new FileWriter(file, true);
+        FileWriter filewriter = new FileWriter(writeFile, true);
         PrintWriter printwriter = new PrintWriter(filewriter);
-        // Create a String array that creates a header
+        // Create a String array to create a header
         String[] header = {"ID", "First name", "Last name", "City", "Postal code", "Credit card number"};
         
-        // For loop to input the header, separated by a comma as the deliminator
+        // Input the header, separated by a comma as the deliminator
         for (int i = 0; i < header.length; i++) {
             printwriter.print(header[i] + ",");
         }
-        // Print an empty line to allow multiple inputs
+        // Print an empty line to allow multiple inputs afterwards
         printwriter.println();
         
         // Close the PrintWriter
