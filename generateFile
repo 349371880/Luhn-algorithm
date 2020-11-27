@@ -4,11 +4,11 @@ if (!informationFile.exists()) {
 }
 
 /**
-  * Create the file that will store every customer's information
-  * @author              Catherine Yu
-  * @param writeFile     The file that will contain every customers' information
-  * @throws IOException
-  */
+     * Create the file that will store every customer's information
+     * @author              Catherine Yu
+     * @param writeFile     The file that will contain every customers' information
+     * @throws IOException
+     */
     public static void generateFile(File writeFile) throws IOException {
         // Create a FileWriter and PrintWriter
         FileWriter filewriter = new FileWriter(writeFile, true);
