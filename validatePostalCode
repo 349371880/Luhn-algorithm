@@ -1,5 +1,5 @@
 // Code in the main to validate the entered postal code and corresponding city with the validatePostalCode method
-validatePC = validatePostalCode(customerInfo[4], customerInfo[3], customerInfo);
+validatePC = validatePostalCode(customerInfo[4], customerInfo[3]);
 if (validatePC == true) {
     System.out.println(customerInfo[4] + " is a valid postal code for " + customerInfo[3]);
 } else {
@@ -11,11 +11,10 @@ if (validatePC == true) {
      * @author              Catherine Yu
      * @param postalCode    The customer's postal code
      * @param city          The customer's city
-     * @param info          The populated array containing the customer's information
      * @return              A boolean value of whether the postal code and city are valid or not
      * @throws FileNotFoundException
      */
-    public static boolean validatePostalCode(String postalCode, String city, String[] info) throws FileNotFoundException {
+    public static boolean validatePostalCode(String postalCode, String city) throws FileNotFoundException {
         // Create a file and a BufferedReader that uses a FileReader to read the file
         // A BufferedReader is used instead of Scanner as the Scanner has a limit to the number of lines it can read
         String fileName = "postal_codes.csv";
