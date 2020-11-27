@@ -33,7 +33,9 @@ class CustomerSystem {
         // Declare and initialize variables
         boolean validatePC, validateCC, validateCCWithLuhn;
         int customerID = 1;
-        String fileName = "customer_information.csv";
+        //User input for the file name
+        System.out.println("What should the name of the file that contains all the customer information be? Please include proper format.");
+        String fileName = (reader.nextLine() + ".csv");
         // Create a file with the above file name
         File file = new File(fileName);
 
@@ -44,9 +46,12 @@ class CustomerSystem {
             if (userInput.equals(enterCustomerOption)) {
                 // Only the line below may be edited based on the parameter list and how you design the method return
 
-                if (file.exists()) {
-                    customerID = generateCustomerID(fileName, customerID);
+                // Create a file with a header if one does not already exist
+                if (!file.exists()) {
+                    generateFile(file);
                 }
+                // Generate a unique customer ID
+                customerID = generateCustomerID(fileName, customerID);
                 // Collect the customer's information and store it in a String array
                 customerInfo = enterCustomerInfo(customerID, customerInfo);
 
@@ -105,6 +110,29 @@ class CustomerSystem {
         .concat("Enter menu option (1-9)\n"));
     }
     /**
+     * Create the file that will store all of the customer's information
+     * @author          Catherine Yu
+     * @param file      The file that contains all of the customers' information
+     * @throws IOException
+     */
+    public static void generateFile(File file) throws IOException {
+        // Create a FileWriter and PrintWriter
+        FileWriter filewriter = new FileWriter(file, true);
+        PrintWriter printwriter = new PrintWriter(filewriter);
+        // Create a String array that creates a header
+        String[] header = {"ID", "First name", "Last name", "City", "Postal code", "Credit card number"};
+        
+        // For loop to input the header, separated by a comma as the deliminator
+        for (int i = 0; i < header.length; i++) {
+            printwriter.print(header[i] + ",");
+        }
+        // Print an empty line to allow multiple inputs
+        printwriter.println();
+        
+        // Close the PrintWriter
+        printwriter.close();
+    }
+    /**
      * Assign the customer a unique ID value based on previous ID values
      * @author          Alex Theaker
      * @param fileName  The name of the file that will contain all of the customer's information
@@ -123,7 +151,7 @@ class CustomerSystem {
             while (reader.hasNextLine()) {
                 String line = reader.nextLine();
                 String stringID = Integer.toString(ID);
-                // If the line contains the current ID number, add one to udpate its value
+                // If the line contains the current ID number, add one to update its value
                 if (line.contains(stringID + ",")) {
                     ID++;
                 }
@@ -139,7 +167,7 @@ class CustomerSystem {
      * Take the customer's information and store it in a String array
      * @author      Catherine Yu
      * @param ID    The customer's unique ID value
-     * @param info  An empty array to contain the customer's information
+     * @param info  An empty array that will contain the customer's information
      * @return      The populated array that contains the customer's information
      */
     public static String[] enterCustomerInfo(int ID, String[] info) {
@@ -251,7 +279,7 @@ class CustomerSystem {
             // Add two digits to handle cases that make two digits after doubling
             sum += d / 10;
             sum += d % 10;
-            
+
             // Reverse the second boolean
             second = !second;
         }
@@ -262,7 +290,7 @@ class CustomerSystem {
      * Create a .CSV file that contains the customer's entered information
      * @author          Catherine Yu
      * @param info      The array that contains the customer's entered information
-     * @param file      
+     * @param file      The file that contains all of the customers' information
      * @throws IOException
      */
     public static void generateCustomerDataFile(String[] info, File file) throws IOException {
