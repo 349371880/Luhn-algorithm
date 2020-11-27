@@ -1,0 +1,30 @@
+// Code in the main to collect the customer's information and store it in a String array with the enterCustomerInfo method
+customerInfo = enterCustomerInfo(customerID, customerInfo);
+
+/**
+     * Store the customer's entered information in a String array
+     * @author      Catherine Yu
+     * @param ID    The customer's unique ID value
+     * @param info  An empty array that will contain the customer's information
+     * @return      The populated array that contains the customer's information
+     */
+    public static String[] enterCustomerInfo(int ID, String[] info) {
+        // Create a new scanner
+        Scanner reader = new Scanner(System.in);
+
+        // Populate the array with the previously generated ID and user inputs
+        info[0] = "" + ID;
+        System.out.println("Customer's first name:");
+        info[1] = reader.nextLine();
+        System.out.println("Customer's last name");
+        info[2] = reader.nextLine();
+        System.out.println("Customer's city with proper capitalization");
+        info[3] = reader.nextLine();
+        System.out.println("Customer's postal code with proper capitalization and spacing");
+        info[4] = reader.nextLine();
+        System.out.println("Customer's credit card number");
+        info[5] = reader.nextLine();
+
+        // Return the populated array
+        return info;
+    }
